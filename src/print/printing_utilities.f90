@@ -1,9 +1,9 @@
 module pic_matrix_printer
    use pic_types, only: dp, default_int
    use pic_string_utils, only: to_string
-   implicit none (type, external)
+   implicit none(type, external)
    !private  ! Make all procedures private by default
-  public
+   public
    interface print_array
       module procedure print_vector
       module procedure print_matrix
@@ -20,7 +20,7 @@ module pic_matrix_printer
 contains
 
    subroutine print_vector_n(vec, n_elements, format_type)
-      implicit none (type, external)
+      implicit none(type, external)
       double precision, intent(in) :: vec(:)
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: format_selected
@@ -40,7 +40,7 @@ contains
    end subroutine print_vector_n
    ! Subroutine to print a vector (1D array)
    subroutine print_vector(vec, format_type)
-      implicit none (type, external)
+      implicit none(type, external)
       real(kind=dp), intent(in) :: vec(:)  ! 1D array
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: format_selected
@@ -61,7 +61,7 @@ contains
 
    ! Subroutine to print a matrix (2D array)
    subroutine print_matrix_m_n(mat, n_cols, n_rows, format_type)
-      implicit none (type, external)
+      implicit none(type, external)
       real(kind=dp), intent(in) :: mat(:, :)  ! 2D array
       integer(kind=default_int), intent(in) :: n_cols, n_rows
       character(len=*), intent(in), optional :: format_type
@@ -82,7 +82,7 @@ contains
 
    ! Subroutine to print a matrix (2D array)
    subroutine print_matrix(mat, format_type)
-      implicit none (type, external)
+      implicit none(type, external)
       real(kind=dp), intent(in) :: mat(:, :)  ! 2D array
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: format_selected
@@ -102,7 +102,7 @@ contains
 
    ! Private subroutine to print plain format for vectors
    subroutine print_plain_vector(vec, n_elements)
-      implicit none (type, external)
+      implicit none(type, external)
       real(kind=dp), intent(in) :: vec(:)
       integer(kind=default_int), intent(in), optional :: n_elements
       integer(kind=default_int) :: i, loop_bound
@@ -119,7 +119,7 @@ contains
 
    ! Private subroutine to print plain format for matrices
    subroutine print_plain_matrix(mat, n_cols, n_rows)
-      implicit none (type, external)
+      implicit none(type, external)
       real(kind=dp), intent(in) :: mat(:, :)
       integer(kind=default_int), intent(in), optional :: n_cols, n_rows
       integer(kind=default_int) :: i, j, loop_bound_i, loop_bound_j
@@ -144,7 +144,7 @@ contains
 
    ! Subroutine to print vector in a specific format (NumPy/Mathematica)
    subroutine print_vector_in_format(vec, format_type, n_elements)
-      implicit none (type, external)
+      implicit none(type, external)
       real(kind=dp), intent(in) :: vec(:)
       character(len=*), intent(in) :: format_type
       integer(kind=default_int), intent(in), optional :: n_elements
@@ -183,7 +183,7 @@ contains
 
    ! Subroutine to print matrix in a specific format (NumPy/Mathematica)
    subroutine print_matrix_in_format(mat, format_type, n_cols, n_rows)
-      implicit none (type, external)
+      implicit none(type, external)
       real(kind=dp), intent(in) :: mat(:, :)
       character(len=*), intent(in) :: format_type
       character(len=1) :: open_bracket, close_bracket

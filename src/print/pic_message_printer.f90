@@ -1,6 +1,6 @@
 module pic_message_printer
    use pic_string_utils, only: to_string
-   implicit none (type, external)
+   implicit none(type, external)
    public :: print_message
    private
 contains

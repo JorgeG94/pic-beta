@@ -1,6 +1,6 @@
 module pic_output_helpers
    use pic_types, only: default_int
-   implicit none (type, external)
+   implicit none(type, external)
    public
 
 contains

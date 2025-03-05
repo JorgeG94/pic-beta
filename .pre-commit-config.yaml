@@ -27,3 +27,9 @@ repos:
         entry: fortitude check src/
         language: system
         pass_filenames: false
+      - id: fprettify
+        name: fprettify
+        entry: fprettify --silent
+        language: system
+        types: [file]
+        files: '\.(f|F|f90|F90)$'
