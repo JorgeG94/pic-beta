@@ -1,4 +1,4 @@
 target_sources(
   ${core_lib}
-  PRIVATE debugging_tools.f90 output_helpers.f90 output_module.f90
-          printing_utilities.f90 string_utilities.f90)
+  PRIVATE pic_debugging_tools.f90 pic_output.f90 pic_string_utils.f90
+          pic_message_printer.f90 pic_output_helpers.f90 printing_utilities.f90)

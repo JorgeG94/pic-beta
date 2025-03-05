@@ -1,19 +1,18 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(PIC
-    LANGUAGES Fortran
-    VERSION 1.0
-    DESCRIPTION "Jorge's cool stuff"
-)
+project(
+  PIC
+  LANGUAGES Fortran
+  VERSION 1.0
+  DESCRIPTION "Jorge's cool stuff")
 
 # Add the source directory where the actual Fortran sources are
 set(core_lib pic)
 add_library(${core_lib} STATIC)
 
-
 # Set a default build type if not specified
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE Release)
 endif()
 
 # Enable position-independent code for shared-library linking support
@@ -24,7 +23,7 @@ set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/modules)
 
 # Check if -DPIC_ENABLE_INT8 is passed and add compile definition SUBNORMAL
 if(PIC_ENABLE_INT8)
-    target_compile_definitions(${core_lib} PRIVATE SUBNORMAL)
+  target_compile_definitions(${core_lib} PRIVATE SUBNORMAL)
 endif()
 
 # Print summary info
@@ -34,14 +33,15 @@ message(STATUS "PIC_ENABLE_INT8: ${PIC_ENABLE_INT8}")
 add_subdirectory(src)
 
 # Install targets
-install(TARGETS ${core_lib}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-)
+install(
+  TARGETS ${core_lib}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
 
 # Install Fortran module files (assuming they are in the build directory)
-install(DIRECTORY ${CMAKE_BINARY_DIR}/
-    DESTINATION include
-    FILES_MATCHING PATTERN "*.mod"
-)
+install(
+  DIRECTORY ${CMAKE_BINARY_DIR}/
+  DESTINATION include
+  FILES_MATCHING
+  PATTERN "*.mod")

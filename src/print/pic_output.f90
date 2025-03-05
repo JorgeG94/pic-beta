@@ -1,7 +1,7 @@
 module pic_output
-   use pic_types
-   use pic_output_helpers
-   implicit none
+   use pic_types, only: default_int
+   use pic_output_helpers, only: print_asterisk_row
+   implicit none (type, external)
    private
 
    type :: Logger

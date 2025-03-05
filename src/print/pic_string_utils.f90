@@ -1,7 +1,8 @@
 module pic_string_utils
-   use pic_types
-   implicit none
+   use pic_types, only: sp, dp, int32, int64
+   implicit none (type, external)
    ! Generic interface for to_string to handle different types
+   public
    interface to_string
       module procedure to_string_int32
       module procedure to_string_int64

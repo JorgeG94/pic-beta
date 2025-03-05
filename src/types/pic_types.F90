@@ -1,8 +1,9 @@
 module pic_types
    !! main module for defining types for integer and double precision
-   use iso_fortran_env
-   implicit none
+   use iso_fortran_env, only: int32, int64
+   implicit none (type, external)
 
+  public
    ! Define kinds for different data types
    ! int32 and int64 are defined in the iso_fortran_env, if you need to change things please do so here
    !integer, parameter :: int64_custom = SELECTED_INT_KIND(18)
