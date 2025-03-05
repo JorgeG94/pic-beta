@@ -20,3 +20,10 @@ repos:
       - id: check-case-conflict
       - id: mixed-line-ending
       - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: fortitude
+        name: fortitude check
+        entry: fortitude check src/
+        language: system
+        pass_filenames: false
