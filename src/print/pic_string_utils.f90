@@ -11,18 +11,7 @@ module pic_string_utils
       module procedure to_string_logical
    end interface
 
-   interface operator(+)
-      module procedure concatenate_strings
-   end interface
-
 contains
-
-   function concatenate_strings(str1, str2) result(concatenated)
-      character(len=*), intent(in) :: str1, str2
-      character(len=len(str1) + len(str2)) :: concatenated
-      concatenated = str1//str2
-      concatenated = trim(concatenated)
-   end function concatenate_strings
 
    ! Overloaded to_string function for integer
    function to_string_int32(i) result(trimmed_str)
