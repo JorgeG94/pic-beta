@@ -24,7 +24,7 @@ repos:
     hooks:
       - id: fortitude
         name: fortitude check
-        entry: fortitude check src/
+        entry: fortitude check --fix --unsafe-fixes src/
         language: system
         pass_filenames: false
       - id: fprettify

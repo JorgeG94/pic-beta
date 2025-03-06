@@ -45,3 +45,8 @@ install(
   DESTINATION include
   FILES_MATCHING
   PATTERN "*.mod")
+set(exe_name app)
+add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.f90)
+target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
+
+target_link_libraries(${exe_name} PRIVATE ${core_lib})
