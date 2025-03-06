@@ -10,8 +10,8 @@ module pic_logger
       debug_level = 10, &
       verbose_level = 9, &
       info_level = 8, &
-      warning_level = 7, &
-      performance_level = 6, &
+      performance_level = 7, &
+      warning_level = 6, &
       error_level = 5
 
    type :: logger_type
@@ -24,11 +24,12 @@ module pic_logger
 
       procedure, public, pass(self) :: configuration
       procedure, public, pass(self) :: configure
+      procedure, public, pass(self) :: log
       procedure, public, pass(self) :: debug
       procedure, public, pass(self) :: verbose
       procedure, public, pass(self) :: info
-      procedure, public, pass(self) :: warning
       procedure, public, pass(self) :: performance
+      procedure, public, pass(self) :: warning
       procedure, public, pass(self) :: error
 
    end type logger_type
@@ -53,96 +54,79 @@ contains
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
-
-      if (self%log_level >= debug_level) then
-         if (present(module) .and. present(procedure)) then
-            write (*, *) 'DEBUG: ', module, procedure, ': ', message
-         else if (present(module)) then
-            write (*, *) 'DEBUG: ', module, ': ', message
-         else
-            write (*, *) 'DEBUG: ', message
-         end if
-      end if
+      call self%log("DEBUG", message, module, procedure)
    end subroutine debug
 
    subroutine verbose(self, message, module, procedure)
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
-
-      if (self%log_level >= verbose_level) then
-         if (present(module) .and. present(procedure)) then
-            write (*, *) 'VERBOSE: ', module, procedure, ': ', message
-         else if (present(module)) then
-            write (*, *) 'VERBOSE: ', module, ': ', message
-         else
-            write (*, *) 'VERBOSE: ', message
-         end if
-      end if
+      call self%log("VERBOSE", message, module, procedure)
    end subroutine verbose
 
    subroutine info(self, message, module, procedure)
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
-
-      if (self%log_level >= info_level) then
-         if (present(module) .and. present(procedure)) then
-            write (*, *) 'INFO: ', module, procedure, ': ', message
-         else if (present(module)) then
-            write (*, *) 'INFO: ', module, ': ', message
-         else
-            write (*, *) 'INFO: ', message
-         end if
-      end if
+      call self%log("INFO", message, module, procedure)
    end subroutine info
 
    subroutine warning(self, message, module, procedure)
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
-
-      if (self%log_level >= warning_level) then
-         if (present(module) .and. present(procedure)) then
-            write (*, *) 'WARNING: ', module, procedure, ': ', message
-         else if (present(module)) then
-            write (*, *) 'WARNING: ', module, ': ', message
-         else
-            write (*, *) 'WARNING: ', message
-         end if
-      end if
+      call self%log("WARNING", message, module, procedure)
    end subroutine warning
 
    subroutine performance(self, message, module, procedure)
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
-
-      if (self%log_level >= performance_level) then
-         if (present(module) .and. present(procedure)) then
-            write (*, *) 'PERFORMANCE: ', module, procedure, ': ', message
-         else if (present(module)) then
-            write (*, *) 'PERFORMANCE: ', module, ': ', message
-         else
-            write (*, *) 'PERFORMANCE: ', message
-         end if
-      end if
+      call self%log("PERFORMANCE", message, module, procedure)
    end subroutine performance
 
    subroutine error(self, message, module, procedure)
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
+      call self%log("ERROR", message, module, procedure)
+   end subroutine error
 
-      if (self%log_level >= error_level) then
+   subroutine log(self, level, message, module, procedure)
+      class(logger_type), intent(in) :: self
+      character(*), intent(in) :: level
+      character(*), intent(in) :: message
+      character(*), intent(in), optional :: module, procedure
+
+      integer :: log_level_value
+
+      select case (trim(level))
+      case ('DEBUG')
+         log_level_value = debug_level
+      case ('VERBOSE')
+         log_level_value = verbose_level
+      case ('INFO')
+         log_level_value = info_level
+      case ('WARNING')
+         log_level_value = warning_level
+      case ('PERFORMANCE')
+         log_level_value = performance_level
+      case ('ERROR')
+         log_level_value = error_level
+      case default
+         write (*, *) 'ERROR: Invalid log level "', trim(level), '"'
+         return
+      end select
+
+      if (self%log_level >= log_level_value) then
          if (present(module) .and. present(procedure)) then
-            write (*, *) 'ERROR: ', module, procedure, ': ', message
+            write (*, *) trim(level), ': ', module, procedure, ': ', message
          else if (present(module)) then
-            write (*, *) 'ERROR: ', module, ': ', message
+            write (*, *) trim(level), ': ', module, ': ', message
          else
-            write (*, *) 'ERROR: ', message
+            write (*, *) trim(level), ': ', message
          end if
       end if
-   end subroutine error
+   end subroutine log
 
 end module pic_logger
