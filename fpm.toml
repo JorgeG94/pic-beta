@@ -1,0 +1,26 @@
+name = "pic"
+version = "0.1.0"
+license = "MIT"
+author = "JorgeG94"
+maintainer = "jorgegalvez1694@gmail.com"
+copyright = "Copyright 2024, JorgeG94"
+[library]
+source-dir = "src"
+[build]
+auto-executables = true
+auto-tests = true
+auto-examples = true
+module-naming = false
+#link = ["openblas"]
+[install]
+library = false
+[fortran]
+implicit-typing = true
+implicit-external = true
+source-form = "free"
+
+[dependencies]
+#stdlib="*"
+#test-drive.git = "https://github.com/fortran-lang/test-drive"
+#openmp = "*"
+#mpi = "*"
