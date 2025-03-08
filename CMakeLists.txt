@@ -23,6 +23,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Make sure Fortran modules are handled properly
 set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/modules)
+message(STATUS "the big variable is ${CMAKE_Fortran_MODULE_DIRECTORY}")
+# Ensure the target property is explicitly set
+set_target_properties(${core_lib} PROPERTIES Fortran_MODULE_DIRECTORY
+                                             ${CMAKE_Fortran_MODULE_DIRECTORY})
 
 # Check if -DPIC_ENABLE_INT8 is passed and add compile definition SUBNORMAL
 if(PIC_ENABLE_INT8)
@@ -65,6 +69,7 @@ target_link_libraries(
 target_include_directories(
   ${core_lib}
   PRIVATE
+    ${CMAKE_Fortran_MODULE_DIRECTORY}
     ${PROJECT_SOURCE_DIR}/lib/jsonfortran-${FORTRAN_COMPILER_ID_LOWER}-${json_fortran_version}/lib/
     ${PROJECT_SOURCE_DIR}/lib/test-drive/include/test-drive/${CMAKE_Fortran_COMPILER_ID}-${CMAKE_Fortran_COMPILER_VERSION}
 )
@@ -73,16 +78,29 @@ add_dependencies(${core_lib} json-fortran test-drive)
 # Install targets
 install(
   TARGETS ${core_lib}
-  ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
-
-# Install Fortran module files (assuming they are in the build directory)
+# Install Fortran module files explicitly
 install(
-  DIRECTORY ${CMAKE_BINARY_DIR}/
+  DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/
   DESTINATION include
   FILES_MATCHING
   PATTERN "*.mod")
+
+# Install json-fortran headers
+install(
+  DIRECTORY
+    ${PROJECT_SOURCE_DIR}/lib/jsonfortran-${FORTRAN_COMPILER_ID_LOWER}-${json_fortran_version}/lib/
+  DESTINATION include
+  FILES_MATCHING
+  PATTERN "*.mod")
+
+# Install test-drive headers
+install(
+  DIRECTORY
+    ${PROJECT_SOURCE_DIR}/lib/test-drive/include/test-drive/${CMAKE_Fortran_COMPILER_ID}-${CMAKE_Fortran_COMPILER_VERSION}
+  DESTINATION include)
+
 set(exe_name app)
 add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.f90)
 target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
