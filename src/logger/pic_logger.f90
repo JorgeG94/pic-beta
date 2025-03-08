@@ -1,4 +1,7 @@
 module pic_logger
+  !! console specific logger, will control printing at different levels
+  !! intended to be used to selectively print out information depending
+  !! on a log level requested
    use pic_types, only: default_int
 
    implicit none(type, external)
@@ -6,13 +9,19 @@ module pic_logger
    public :: global_logger, logger_type
 
    character(*), parameter :: name = 'pic_logger'
-   integer, parameter, public :: &
-      debug_level = 10, &
-      verbose_level = 9, &
-      info_level = 8, &
-      performance_level = 7, &
-      warning_level = 6, &
-      error_level = 5
+     !! experimental variable information, this will tell the logger what module and procedure a print is called from
+   integer, parameter, public :: debug_level = 10
+     !! highest logger level, will show _everything_
+   integer, parameter, public :: verbose_level = 9
+     !! detailed log level, will not show program state such as "calling blas library"
+   integer, parameter, public :: info_level = 8
+     !! default level, will show the most important information for program execution
+   integer, parameter, public :: performance_level = 7
+     !! will show performance related information such as timings for subroutines, FLOP rates for BLAS calls
+   integer, parameter, public :: warning_level = 6
+     !! will only show warnings, such as "matrix is nearly singular!"
+   integer, parameter, public :: error_level = 5
+     !! will only show catastrophic error that will crash the program
 
    type :: logger_type
 
@@ -39,18 +48,21 @@ module pic_logger
 contains
 
    pure subroutine configuration(self, level)
+     !! gets the configuration for the logger, i.e. what level it is set to
       class(logger_type), intent(in) :: self
       integer(default_int), intent(out), optional :: level
       if (present(level)) level = self%log_level
    end subroutine configuration
 
    pure subroutine configure(self, level)
+     !! sets the logger to a default print level
       class(logger_type), intent(inout) :: self
       integer(default_int), intent(in), optional :: level
       if (present(level)) self%log_level = level
    end subroutine configure
 
    subroutine debug(self, message, module, procedure)
+     !! wrapper for debug level printing
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -58,6 +70,7 @@ contains
    end subroutine debug
 
    subroutine verbose(self, message, module, procedure)
+     !! wrapper for verbose level printer
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -65,6 +78,7 @@ contains
    end subroutine verbose
 
    subroutine info(self, message, module, procedure)
+     !! wrapper for info level printer
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -72,6 +86,7 @@ contains
    end subroutine info
 
    subroutine warning(self, message, module, procedure)
+     !! wrapper for warning level printer
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -79,6 +94,7 @@ contains
    end subroutine warning
 
    subroutine performance(self, message, module, procedure)
+     !! wrapper for performance level printer
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -86,6 +102,7 @@ contains
    end subroutine performance
 
    subroutine error(self, message, module, procedure)
+     !! wrapper for error level printer
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -93,6 +110,7 @@ contains
    end subroutine error
 
    subroutine log(self, level, message, module, procedure)
+     !! main routine for printing at the desired log level
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: level
       character(*), intent(in) :: message
