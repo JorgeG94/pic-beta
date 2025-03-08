@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
+if(POLICY CMP0135)
+  cmake_policy(SET CMP0135 NEW)
+endif()
 
 project(
   PIC
@@ -30,8 +33,43 @@ endif()
 message(STATUS "Fortran compiler: ${CMAKE_Fortran_COMPILER}")
 message(STATUS "PIC_ENABLE_INT8: ${PIC_ENABLE_INT8}")
 
+set(SKIP_DOC_GEN
+    TRUE
+    CACHE BOOL "Option to skip documentation generation")
+include(ExternalProject)
+set(json_fortran_version 9.0.1)
+ExternalProject_Add(
+  json-fortran
+  URL https://github.com/jacobwilliams/json-fortran/archive/refs/tags/${json_fortran_version}.tar.gz
+  PREFIX ${PROJECT_SOURCE_DIR}/external/json-fortran
+  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/lib/
+             -DSKIP_DOC_GEN=TRUE -DCMAKE_VERBOSE_MAKEFILE=OFF
+  LOG_BUILD ON # Enable logging to capture build output
+)
+# testing framework, supported by the Fortran-lang github orgo
+set(test-drive_version 0.4.0)
+ExternalProject_Add(
+  test-drive
+  URL https://github.com/fortran-lang/test-drive/archive/refs/tags/v${test-drive_version}.tar.gz
+  PREFIX ${PROJECT_SOURCE_DIR}/external/test-drive
+  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/lib/test-drive)
+
 add_subdirectory(src)
 
+string(TOLOWER "${CMAKE_Fortran_COMPILER_ID}" FORTRAN_COMPILER_ID_LOWER)
+target_link_libraries(
+  ${core_lib}
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/lib/jsonfortran-${FORTRAN_COMPILER_ID_LOWER}-${json_fortran_version}/lib/libjsonfortran.a
+    ${PROJECT_SOURCE_DIR}/lib/test-drive/lib/libtest-drive.a)
+target_include_directories(
+  ${core_lib}
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/lib/jsonfortran-${FORTRAN_COMPILER_ID_LOWER}-${json_fortran_version}/lib/
+    ${PROJECT_SOURCE_DIR}/lib/test-drive/include/test-drive/${CMAKE_Fortran_COMPILER_ID}-${CMAKE_Fortran_COMPILER_VERSION}
+)
+
+add_dependencies(${core_lib} json-fortran test-drive)
 # Install targets
 install(
   TARGETS ${core_lib}
