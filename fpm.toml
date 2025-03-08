@@ -20,7 +20,7 @@ implicit-external = true
 source-form = "free"
 
 [dependencies]
-#stdlib="*"
-#test-drive.git = "https://github.com/fortran-lang/test-drive"
+test-drive.git = "https://github.com/fortran-lang/test-drive"
+json-fortran = { git = "https://github.com/jacobwilliams/json-fortran" }
 #openmp = "*"
 #mpi = "*"
